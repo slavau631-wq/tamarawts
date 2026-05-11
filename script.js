@@ -37,12 +37,31 @@ function trackLead() {
   }
 }
 
+function handleCtaClick(event) {
+  const targetUrl = ctaButton.href;
+
+  if (!targetUrl) {
+    return;
+  }
+
+  if (typeof window.fbq !== "function") {
+    return;
+  }
+
+  event.preventDefault();
+  trackLead();
+
+  window.setTimeout(() => {
+    window.location.href = targetUrl;
+  }, 250);
+}
+
 function renderProfile(config) {
   profileName.textContent = config.name;
   ctaButton.textContent = config.buttonLabel;
   ctaButton.href = buildWhatsAppLink(config.whatsappNumber, config.outgoingMessage);
   avatarFallback.textContent = getInitials(config.name);
-  ctaButton.addEventListener("click", trackLead);
+  ctaButton.addEventListener("click", handleCtaClick);
 
   if (config.avatarUrl.trim()) {
     avatarImage.src = config.avatarUrl;
